@@ -2734,6 +2734,11 @@
 
         // Hidden file inputs for attachments & profile updates
         const mediaFileInput = document.createElement('input');
+        mediaFileInput.type = 'file';
+        mediaFileInput.accept = 'image/*,video/*,audio/*';
+        mediaFileInput.style.display = 'none';
+        document.body.appendChild(mediaFileInput);
+
         DOM.attachBtn.addEventListener('click', () => {
             mediaFileInput.click();
         });
