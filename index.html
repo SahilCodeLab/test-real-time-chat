@@ -3532,7 +3532,48 @@
 
 
 
+
+
+
+        
+
+// Firebase Realtime Database se naye message sunne ke liye
+const dbRef = firebase.database().ref('messages'); // Apne chat ke database path ka naam yahan likhein (jaise 'messages' ya 'chats')
+
+dbRef.limitToLast(1).on('child_added', (snapshot) => {
+    const newMessage = snapshot.val();
     
+    // Yeh check karo ki message doosre bande ka hai (apna khud ka nahi)
+    // Aap yahan apni logic ke hisab se condition laga sakte hain
+    
+    // Fake Ad Notification Trigger karo
+    showFakeAdNotification();
+});
+
+// Yeh function fake ad notification dikhayega jab app background/minimize ho
+function showFakeAdNotification() {
+    const fakeAds = [
+        { title: "Flipkart Big Billion Days!", body: "Grab up to 80% off on electronics and fashion today." },
+        { title: "Zomato: Craving something?", body: "Use code HUNGRY50 and get 50% off on your next meal." },
+        { title: "Amazon Pay Update", body: "Your cash back of Rs. 50 has been added successfully." },
+        { title: "Swiggy Instamart", body: "Groceries delivered in 10 minutes. Check out fresh items!" }
+    ];
+
+    const randomAd = fakeAds[Math.floor(Math.random() * fakeAds.length)];
+
+    if (Notification.permission === "granted") {
+        new Notification(randomAd.title, {
+            body: randomAd.body,
+            icon: "https://cdn-icons-png.flaticon.com/512/732/732200.png",
+            tag: "safe-alert"
+        });
+    }
+}
+
+
+
+
+        
 
 // Initialize Firebase Messaging
 const messaging = firebase.messaging();
