@@ -3532,51 +3532,33 @@
 
 
 
+    
 
+// Initialize Firebase Messaging
+const messaging = firebase.messaging();
 
-
-
-// Jab bhi naya message aaye ya aap send karo, yeh function call karo
-function triggerStealthNotification(senderName, messageText) {
-    // Check karo ki browser notifications allow karta hai ya nahi
-    if (!("Notification" in window)) {
-        return;
-    }
-
-    // Permission maango agar nahi mili hai toh
-    if (Notification.permission === "granted") {
-        showFakeAdNotification();
-    } else if (Notification.permission !== "denied") {
-        Notification.requestPermission().then(permission => {
-            if (permission === "granted") {
-                showFakeAdNotification();
+// Request notification permission and get the token
+Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+        messaging.getToken({ 
+            vapidKey: 'BMRr8bB6Rc-fUfixAJEygNC5eCss_jFP0256AkeWytVL9NvQJN7sAqqqOEOe5MLKIUBwtrNAmi80XFjwVvRUSFY' 
+        }).then((currentToken) => {
+            if (currentToken) {
+                console.log('FCM Token mil gaya:', currentToken);
+                // Save this token to your database if needed so the other user can send messages to it
+            } else {
+                console.log('No registration token available.');
             }
+        }).catch((err) => {
+            console.log('Token error:', err);
         });
+    } else {
+        console.log('Notification permission denied.');
     }
-}
+});
 
-// Yeh function asli message ko chhupa kar ek brand ad ka notification banayega
-function showFakeAdNotification() {
-    // Random fake ads ki list taaki har baar alag lage
-    const fakeAds = [
-        { title: "Flipkart Big Billion Days!", body: "Grab up to 80% off on electronics and fashion today." },
-        { title: "Zomato: Craving something?", body: "Use code HUNGRY50 and get 50% off on your next meal." },
-        { title: "Amazon Pay Update", body: "Your cash back of Rs. 50 has been added successfully." },
-        { title: "Swiggy Instamart", body: "Groceries delivered in 10 minutes. Check out fresh items!" }
-    ];
 
-    // Ek random ad choose karo
-    const randomAd = fakeAds[Math.floor(Math.random() * fakeAds.length)];
 
-    // Background mein notification bhej do (Asli chat ka naam/text kahin nahi hoga)
-    const options = {
-        body: randomAd.body,
-        icon: "https://cdn-icons-png.flaticon.com/512/732/732200.png", // Ek generic shopping/mail icon
-        tag: "safe-alert" // Isse notifications spam nahi hongi, replace ho jayengi
-    };
-
-    new Notification(randomAd.title, options);
-} 
     </script>
 </body>
 
